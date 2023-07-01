@@ -1,26 +1,10 @@
 let resDisplay = document.getElementById("display");
 resDisplay.textContent = "0";
+let firstNum, secondNum;
 
 const btns = document.querySelectorAll("button");
 btns.forEach((btn) => {
   btn.addEventListener("click", () => {
-    // if (resDisplay.textContent == "0" && btn.id != "0" && btn.id != "clear") {
-    //   resDisplay.textContent = "";
-    //   resDisplay.textContent += btn.id;
-    // } else if (btn.id == "clear") {
-    //   resDisplay.textContent = "0";
-    // } else if (btn.id == '.') {
-    //     if (resDisplay.textContent.indexOf('.') < 0) {
-    //               resDisplay.textContent += btn.id;
-    //     }
-    // }
-
-    // else {
-    //   resDisplay.textContent += btn.id;
-    // }
-    //   });
-    /* ABOVE IS THE ORIGINAL, GO BACK IF YOU GOOFED PLEASE I BEG YOU */
-
     if (btn.id == "delete" && resDisplay.textContent.length > 0) {
       resDisplay.textContent = resDisplay.textContent.slice(
         0,
@@ -44,17 +28,42 @@ btns.forEach((btn) => {
     if (btn.id == "." && resDisplay.textContent.indexOf(".") < 0) {
       resDisplay.textContent += btn.id;
     }
+
+    if (btn.className == "operation" && btn.id != 'delete') {
+     secondNum;
+      if (firstNum == undefined) {
+        firstNum = Number(resDisplay.textContent);
+      } else if (typeof firstNum == "number" && secondNum == undefined) {
+        secondNum = Number(resDisplay.textContent);
+      }
+      const opChoice = btn.id;
+
+      console.log(firstNum);
+      console.log(secondNum);
+      console.log(opChoice);
+      if (firstNum != undefined && secondNum != undefined)
+        switch (btn.id) {
+          case "+":
+            operate();
+            break;
+          case "-":
+            operate();
+            break;
+          case "/":
+            operate();
+            break;
+          case "*":
+            operate();
+            break;
+          case "%":
+            operate();
+            break;
+          case "equals":
+            operate();
+            break;
+        }
+    }
   });
 });
 
-const firstNum = Number(resDisplay.textContent);
-
-// function add(){}
-
-// function subtract(){}
-
-// function multiply(){}
-
-// function divide(){}
-
-// function operate(){}
+function operate(numOne, currOp, numTwo) {}
