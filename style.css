@@ -72,7 +72,7 @@ button:hover {
 }
 
 button[data-value="equals"] {
-  height: 148px;
+  height: 152px;
   background-color: paleturquoise;
   border-radius: 8px;
 }
