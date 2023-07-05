@@ -11,6 +11,10 @@ button {
   font-size: 20px;
 }
 
+button:hover {
+  background-color:darkgrey;
+}
+
 .wrapper {
   display: flex;
   justify-content: center;
@@ -62,6 +66,8 @@ button {
     width: 76px;
     height: 76px;
     /* border: 1px solid black; */
+    border-radius: 8px;
+    transition:background-color .2s;
   }
 }
 
