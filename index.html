@@ -5,43 +5,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ODIN CALCULATOR</title>
     <link rel="stylesheet" href="style.css" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
     <script src="script.js" defer></script>
   </head>
   <body>
     <div class="wrapper">
       <div class="calcbody">
-        <div id="display"></div>
+        <div class="display"></div>
         <div class="button-section">
           <div class="column">
-            <button class="operation" id="clear">C</button>
-            <button id="7">7</button>
-            <button id="4">4</button>
-            <button id="1">1</button>
-            <button class ="operation" id="%">%</button>
+            <button onclick="clearNum()" data-value="clear">C</button>
+            <button class="numeric" data-value="7">7</button>
+            <button class="numeric" data-value="4">4</button>
+            <button class="numeric" data-value="1">1</button>
+            <button class="operation" data-value="%">%</button>
           </div>
           <div class="column">
-            <button class ="operation" id="/">÷</button>
-            <button id="8">8</button>
-            <button id="5">5</button>
-            <button id="2">2</button>
-            <button id="0">0</button>
+            <button class="operation" data-value="/">÷</button>
+            <button class="numeric" data-value="8">8</button>
+            <button class="numeric" data-value="5">5</button>
+            <button class="numeric" data-value="2">2</button>
+            <button class="numeric" data-value="0">0</button>
           </div>
           <div class="column">
-            <button class ="operation" id="*">x</button>
-            <button id="9">9</button>
-            <button id="6">6</button>
-            <button id="3">3</button>
-            <button id=".">.</button>
-            
+            <button class="operation" data-value="*">x</button>
+            <button class="numeric" data-value="9">9</button>
+            <button class="numeric" data-value="6">6</button>
+            <button class="numeric" data-value="3">3</button>
+            <button onclick="addDecimal()" data-value=".">.</button>
           </div>
           <div class="column">
-            <button class ="operation" id="delete">BSC</button>
-            <button class ="operation" id="-">-</button>
-            <button class ="operation" id="+">+</button>
-            <button class ="operation" id="equals">=</button>
+            <button onclick="backNum()" data-value="delete">BSC</button>
+            <button class="operation" data-value="-">-</button>
+            <button class="operation" data-value="+">+</button>
+            <button onclick="operate(firstNum, currentOp, resDisplay.textContent)" data-value="equals">=</button>
+          </div>
         </div>
       </div>
     </div>

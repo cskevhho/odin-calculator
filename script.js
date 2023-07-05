@@ -1,69 +1,82 @@
-let resDisplay = document.getElementById("display");
+let resDisplay = document.querySelector(".display");
 resDisplay.textContent = "0";
-let firstNum, secondNum;
+let firstNum, secondNum, currentOp, shouldReset;
 
-const btns = document.querySelectorAll("button");
-btns.forEach((btn) => {
-  btn.addEventListener("click", () => {
-    if (btn.id == "delete" && resDisplay.textContent.length > 0) {
-      resDisplay.textContent = resDisplay.textContent.slice(
-        0,
-        resDisplay.textContent.length - 1
-      );
-      if (resDisplay.textContent == "") {
-        resDisplay.textContent = "0";
-      }
+const numBtns = Array.from(document.getElementsByClassName("numeric"));
+numBtns.forEach((numBtn) => {
+  numBtn.addEventListener("click", () => {
+    if (resDisplay.textContent == "0" || shouldReset) {
+      resDisplay.textContent = "";
+      shouldReset = false;
     }
-    if (btn.id == "clear") {
+    resDisplay.textContent += numBtn.dataset.value;
+  });
+});
+
+const opBtns = Array.from(document.getElementsByClassName("operation"));
+opBtns.forEach((opBtn) => {
+  opBtn.addEventListener("click", () => {
+    if (firstNum == undefined) {
+      firstNum = Number(resDisplay.textContent);
+      currentOp = opBtn.dataset.value;
       resDisplay.textContent = "0";
-    }
-    if (btn.className != "operation" && btn.id != "delete" && btn.id != ".") {
-      if (resDisplay.textContent == "0") {
-        resDisplay.textContent = "";
-      }
-      if (resDisplay.textContent.length != 12) {
-        resDisplay.textContent += btn.id;
-      }
-    }
-    if (btn.id == "." && resDisplay.textContent.indexOf(".") < 0) {
-      resDisplay.textContent += btn.id;
-    }
-
-    if (btn.className == "operation" && btn.id != 'delete') {
-     secondNum;
-      if (firstNum == undefined) {
-        firstNum = Number(resDisplay.textContent);
-      } else if (typeof firstNum == "number" && secondNum == undefined) {
-        secondNum = Number(resDisplay.textContent);
-      }
-      const opChoice = btn.id;
-
-      console.log(firstNum);
-      console.log(secondNum);
-      console.log(opChoice);
-      if (firstNum != undefined && secondNum != undefined)
-        switch (btn.id) {
-          case "+":
-            operate();
-            break;
-          case "-":
-            operate();
-            break;
-          case "/":
-            operate();
-            break;
-          case "*":
-            operate();
-            break;
-          case "%":
-            operate();
-            break;
-          case "equals":
-            operate();
-            break;
-        }
+    } else if (firstNum !== undefined && secondNum == undefined) {
+      secondNum = Number(resDisplay.textContent);
+      firstNum = operate(firstNum, currentOp, secondNum); // Perform the previous operation and update firstNum
+      currentOp = opBtn.dataset.value;
+      resDisplay.textContent = firstNum; // Update the display with the intermediate sum
+      secondNum = undefined;
+      shouldReset = true;
     }
   });
 });
 
-function operate(numOne, currOp, numTwo) {}
+const equalsBtn = document.querySelector("[data-value='equals']");
+equalsBtn.addEventListener("click", () => {
+  if (firstNum !== undefined && currentOp !== undefined) {
+    secondNum = Number(resDisplay.textContent);
+    firstNum = operate(firstNum, currentOp, secondNum); // Perform the operation and update firstNum
+    currentOp = undefined;
+    secondNum = undefined;
+    resDisplay.textContent = firstNum; // Update the display with the final result
+  }
+});
+
+function clearNum() {
+  resDisplay.textContent = "0";
+  firstNum = undefined;
+  secondNum = undefined;
+  currentOp = undefined;
+  shouldReset = false;
+}
+
+function backNum() {
+  if (resDisplay.textContent.length == 1 && resDisplay.textContent != "0") {
+    resDisplay.textContent = "0";
+  } else if (resDisplay.textContent.length > 1) {
+    resDisplay.textContent = resDisplay.textContent.slice(0, -1);
+  }
+}
+
+function addDecimal() {
+  if (resDisplay.textContent.indexOf(".") < 0) {
+    resDisplay.textContent += ".";
+  }
+}
+
+function operate(numOne, currOp, numTwo) {
+  numOne = Number(numOne);
+  numTwo = Number(numTwo);
+  switch (currOp) {
+    case "%":
+      return numOne / 100;
+    case "/":
+      return numOne / numTwo;
+    case "*":
+      return numOne * numTwo;
+    case "+":
+      return numOne + numTwo;
+    case "-":
+      return numOne - numTwo;
+  }
+}
