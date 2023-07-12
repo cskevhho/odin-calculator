@@ -1,82 +1,96 @@
-let resDisplay = document.querySelector(".display");
-resDisplay.textContent = "0";
-let firstNum, secondNum, currentOp, shouldReset;
+let operator = "";
+let previousValue = "";
+let currentValue = "";
 
-const numBtns = Array.from(document.getElementsByClassName("numeric"));
-numBtns.forEach((numBtn) => {
-  numBtn.addEventListener("click", () => {
-    if (resDisplay.textContent == "0" || shouldReset) {
-      resDisplay.textContent = "";
-      shouldReset = false;
+document.addEventListener("DOMContentLoaded", function () {
+  // Store all components on HTML in our JS
+  let clear = document.querySelector("#clear-btn");
+  let equal = document.querySelector(".equal");
+  let decimal = document.querySelector(".decimal");
+
+  let numbers = document.querySelectorAll(".number");
+  let operators = document.querySelectorAll(".operator");
+
+  let previousScreen = document.querySelector(".previous");
+  let currentScreen = document.querySelector(".current");
+
+  numbers.forEach((number) =>
+    number.addEventListener("click", function (e) {
+      handleNumber(e.target.textContent);
+      document.querySelector(".current").textContent = currentValue;
+    })
+  );
+
+  operators.forEach((op) =>
+    op.addEventListener("click", function (e) {
+      handleOperator(e.target.textContent);
+      previousScreen.textContent = previousValue + " " + operator;
+      document.querySelector(".current").textContent = currentValue;
+    })
+  );
+
+  clear.addEventListener("click", function () {
+    previousValue = "";
+    currentValue = "";
+    operator = "";
+    previousScreen.textContent = currentValue;
+    document.querySelector(".current").textContent = currentValue;
+  });
+
+  equal.addEventListener("click", function () {
+    if (currentValue != "" && previousValue != "") {
+      calculate();
+      previousScreen.textContent = "";
+      if (previousValue.length <= 5) {
+        currentScreen.textContent = previousValue;
+      } else {
+        currentScreen.textContent = previousValue.slice(0, 5) + "...";
+      }
     }
-    resDisplay.textContent += numBtn.dataset.value;
+  });
+
+  decimal.addEventListener("click", function () {
+    addDecimal();
   });
 });
 
-const opBtns = Array.from(document.getElementsByClassName("operation"));
-opBtns.forEach((opBtn) => {
-  opBtn.addEventListener("click", () => {
-    if (firstNum == undefined) {
-      firstNum = Number(resDisplay.textContent);
-      currentOp = opBtn.dataset.value;
-      resDisplay.textContent = "0";
-    } else if (firstNum !== undefined && secondNum == undefined) {
-      secondNum = Number(resDisplay.textContent);
-      firstNum = operate(firstNum, currentOp, secondNum); // Perform the previous operation and update firstNum
-      currentOp = opBtn.dataset.value;
-      resDisplay.textContent = firstNum; // Update the display with the intermediate sum
-      secondNum = undefined;
-      shouldReset = true;
-    }
-  });
-});
-
-const equalsBtn = document.querySelector("[data-value='equals']");
-equalsBtn.addEventListener("click", () => {
-  if (firstNum !== undefined && currentOp !== undefined) {
-    secondNum = Number(resDisplay.textContent);
-    firstNum = operate(firstNum, currentOp, secondNum); // Perform the operation and update firstNum
-    currentOp = undefined;
-    secondNum = undefined;
-    resDisplay.textContent = firstNum; // Update the display with the final result
+function handleNumber(num) {
+  if (currentValue.length <= 5) {
+    currentValue += num;
   }
-});
-
-function clearNum() {
-  resDisplay.textContent = "0";
-  firstNum = undefined;
-  secondNum = undefined;
-  currentOp = undefined;
-  shouldReset = false;
 }
 
-function backNum() {
-  if (resDisplay.textContent.length == 1 && resDisplay.textContent != "0") {
-    resDisplay.textContent = "0";
-  } else if (resDisplay.textContent.length > 1) {
-    resDisplay.textContent = resDisplay.textContent.slice(0, -1);
+function handleOperator(op) {
+  operator = op;
+  previousValue = currentValue;
+  currentValue = "";
+}
+
+function calculate() {
+  previousValue = Number(previousValue);
+  currentValue = Number(currentValue);
+
+  if (operator === "+") {
+    previousValue += currentValue;
+  } else if (operator === "-") {
+    previousValue -= currentValue;
+  } else if (operator === "x") {
+    previousValue *= currentValue;
+  } else {
+    previousValue /= currentValue;
   }
+
+  previousValue = roundNumber(previousValue);
+  previousValue = previousValue.toString();
+  currentValue = previousValue.toString();
+}
+
+function roundNumber(num) {
+  return Math.round(num * 1000) / 1000;
 }
 
 function addDecimal() {
-  if (resDisplay.textContent.indexOf(".") < 0) {
-    resDisplay.textContent += ".";
-  }
-}
-
-function operate(numOne, currOp, numTwo) {
-  numOne = Number(numOne);
-  numTwo = Number(numTwo);
-  switch (currOp) {
-    case "%":
-      return numOne / 100;
-    case "/":
-      return numOne / numTwo;
-    case "*":
-      return numOne * numTwo;
-    case "+":
-      return numOne + numTwo;
-    case "-":
-      return numOne - numTwo;
+  if (!currentValue.includes(".")) {
+    currentValue += ".";
   }
 }
